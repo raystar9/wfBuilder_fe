@@ -1,3 +1,5 @@
+import Deck from '../components/deck';
+
 export default function Test() {
-    return <><div>Hello, world!</div></>;
+    return <><Deck/></>;
 }
