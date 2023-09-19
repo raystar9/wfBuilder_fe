@@ -3,30 +3,39 @@ import axios from 'axios';
 import styles from './deck.module.scss';
 
 
-export default class Deck extends Component<DeckProps, DeckState> {
+export default class Deck extends Component<DeckProps, {"decks":DeckState[]}> {
 
     constructor(readonly props: {}) {
         super(props);
-        this.state = { m1: "10", m2: "101", m3: "102", u1: "103", u2: "104", u3: "105", e1: "106", e2: "107", e3: "108", s1: "109", s2: "110", s3: "111", }
+        this.state = {
+            "decks": [
+                {m1: "10", m2: "101", m3: "102", u1: "103", u2: "104", u3: "105", e1: "106", e2: "107", e3: "108", s1: "109", s2: "110", s3: "111", }, 
+                { m1: "10", m2: "101", m3: "102", u1: "103", u2: "104", u3: "105", e1: "106", e2: "107", e3: "108", s1: "109", s2: "110", s3: "111", }
+            ]
+        }
     }
     async componentDidMount(): Promise<void> {
-        const res = await (axios.get("http://127.0.0.1:3000/rest/decks/1"))
-        console.log(res);
+        //const res = await (axios.get("http://127.0.0.1:3000/rest/decks/1"))
+        //console.log(res);
     }
     render(): ReactNode {
+        var deckList = this.state.decks.map( (deck, idx) => {
+            return (
+            <ul key={idx} className={styles.deck}>
+                <li>
+                    <DeckSlot main={deck.m1} unison={deck.u1} equipment={deck.e1} soul={deck.s1}></DeckSlot>
+                </li>
+                <li>
+                    <DeckSlot main={deck.m2} unison={deck.u2} equipment={deck.e2} soul={deck.s2}></DeckSlot>
+                </li>
+                <li>
+                    <DeckSlot main={deck.m3} unison={deck.u3} equipment={deck.e3} soul={deck.s3}></DeckSlot>
+                </li>
+            </ul>)
+            });
         return (
         <div>
-            <ul className={styles.deck}>
-                <li>
-                    <DeckSlot main={this.state.m1} unison={this.state.u1} equipment={this.state.e1} soul={this.state.s1}></DeckSlot>
-                </li>
-                <li>
-                    <DeckSlot main={this.state.m2} unison={this.state.u2} equipment={this.state.e2} soul={this.state.s2}></DeckSlot>
-                </li>
-                <li>
-                    <DeckSlot main={this.state.m3} unison={this.state.u3} equipment={this.state.e3} soul={this.state.s3}></DeckSlot>
-                </li>
-            </ul>
+            {deckList}
         </div>
         );
     }
@@ -45,10 +54,10 @@ class DeckSlot extends Component {
 
     render(): ReactNode {
         return (<div className={styles.deckSlot}>
-            <div className={styles.main}>{this.props.main}</div>
-            <div className={styles.unison}>{this.props.unison}</div>
-            <div className={styles.equipment}>{this.props.equipment}</div>
-            <div className={styles.soul}>{this.props.soul}</div>
+            <div className={styles.main}><div className={styles.image}>{this.props.main}</div></div>
+            <div className={styles.equipment}><div className={styles.image}>{this.props.equipment}</div></div>
+            <div className={styles.soul}><div className={styles.image}>{this.props.soul}</div></div>
+            <div className={styles.unison}><div className={styles.image}>{this.props.unison}</div></div>
             </div>);
     }
 }
