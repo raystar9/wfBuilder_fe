@@ -27,4 +27,14 @@ const CategoriesContext = createContext({
         { codeKind: "S_CATEGORY", key: "010104", relKey: "0101", name: "0101testC" },
         { codeKind: "S_CATEGORY", key: "010105", relKey: "0101", name: "0101testD" },
     ]})
-export {CategoriesContext};
+const CharactersContext = createContext([{
+    id:"10",
+    type:"1",
+},{
+    id:"101",
+    type:"1",
+},{
+    id:"102",
+    type:"1",
+}])
+export {CategoriesContext, CharactersContext};

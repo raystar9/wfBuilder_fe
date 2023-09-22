@@ -7,7 +7,7 @@ type CategoryStore = {
         sCategory: string;
     },
     storeLCategory : (lCategory:CategoryStore['selectedCategory']['lCategory']) => void,
-    storeMCategory : (lCategory:CategoryStore['selectedCategory']['mCategory']) => void,
+    storeMCategory : (mCategory:CategoryStore['selectedCategory']['mCategory']) => void,
 }
 
 const useCategoryStore = create<CategoryStore>()(set => ({
