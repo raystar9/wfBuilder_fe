@@ -5,7 +5,7 @@ import Modal from './modal';
 import { DeckType, useDeckStore } from './deck.module';
 
 function Deck(props: { type?: string, deckChangeHandler?: () => void }) {
-    const {decks, updateDeck} = useDeckStore();
+    const {decks, setDeck, updateDeck} = useDeckStore();
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedImage, setSelectedImage] = useState({ index:0, position: "e1"});
 
@@ -22,6 +22,10 @@ function Deck(props: { type?: string, deckChangeHandler?: () => void }) {
 
     const setCharacter = (id: string) => {
         updateDeck({index:selectedImage.index, position:selectedImage.position as keyof DeckType, value:id})
+    }
+
+    if(props?.type === "register" && decks?.length == 0) {
+        setDeck([{}]);
     }
 
     return (
@@ -41,13 +45,14 @@ function Deck(props: { type?: string, deckChangeHandler?: () => void }) {
                 </ul>
             )
             }
-            {props.type === "register" && <Modal visible={modalVisible} closeModalHandler={closeModalPopup}></Modal>}
+            {props.type === "register" && <Modal visible={modalVisible} closeModalHandler={closeModalPopup} onImageClick={id => {setCharacter(id); closeModalPopup();}}></Modal>}
         </div>
     )
 }
 function DeckSlot(props: DeckSlotType) {
+    const onClickHandler = () => {}
     return (<div className={styles.deckSlot}>
-        <div className={styles.main} {...props.type === "register" && { onClick: event=>{props.onClick?props.onClick(event):null;props.clickPositionHandler?props.clickPositionHandler(`e${props.position}`):null;} }}>
+        <div className={styles.main} {...props.type === "register" && { onClick: event=>{props.onClick?props.onClick(event):null;props.clickPositionHandler?props.clickPositionHandler(`m${props.position}`):null;} }}>
             {props.main && <Image src={`/${props.main}.png`} width="100" height="100" alt="" className={styles.image} />}
         </div>
         <div className={styles.equipment} {...props.type === "register" && { onClick: props.onClick }}>

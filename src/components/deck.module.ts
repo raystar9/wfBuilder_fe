@@ -4,6 +4,7 @@ import axios from 'axios';
 type DeckStore = {
     decks:DeckType[],
     inquiryDecks: (inquiryCondition:InquiryCondition) => void,
+    setDeck: (decks:DeckType[]) => void,
     updateDeck: (option:UpdateOption) => void,
 }
 
@@ -21,6 +22,12 @@ const useDeckStore = create<DeckStore>()(set => ({
                 set(() => ({decks:result.data}));
             } catch(e) {
             }
+        },
+        setDeck:(decks: DeckType[]) => {
+            set((state) => {
+                debugger;
+                return ({...state, decks});
+            })
         },
         updateDeck: (option:UpdateOption) => {
             const idx = option.index?option.index:0;
