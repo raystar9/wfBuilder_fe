@@ -6,26 +6,29 @@ type DeckStore = {
     inquiryDecks: (inquiryCondition:InquiryCondition) => void,
     setDeck: (decks:DeckType[]) => void,
     updateDeck: (option:UpdateOption) => void,
+    registerDeck: (deck:DeckType, codes?:CodeType[]) => Promise<void>
+}
+
+type CodeType = {
+    codeKind?:string
+    codeKey?:string
 }
 
 const useDeckStore = create<DeckStore>()(set => ({
         decks:[
-        // { m1: "10", m2: "101", m3: "102", u1: "103", u2: "104", u3: "105", e1: "106", e2: "107", e3: "108", s1: "109", s2: "110", s3: "111", },
-        // { m1: "10", m2: "101", m3: "102", u1: "103", u2: "104", u3: "105", e1: "106", e2: "107", e3: "108", s1: "109", s2: "110", s3: "111", }
         ],
         inquiryDecks: async (inquiryCondition:InquiryCondition) => {
             try {
                 const result = await axios.get("http://127.0.0.1:3000/rest/decks?" 
-                + "large-category=" + inquiryCondition.largeCategory
-                + "&medium-category=" + inquiryCondition.mediumCategory
-                + "&small-category=" + inquiryCondition.smallCategory)
+                + "largeCategory=" + inquiryCondition.largeCategory
+                + "&mediumCategory=" + inquiryCondition.mediumCategory
+                + "&smallCategory=" + inquiryCondition.smallCategory)
                 set(() => ({decks:result.data}));
             } catch(e) {
             }
         },
         setDeck:(decks: DeckType[]) => {
             set((state) => {
-                debugger;
                 return ({...state, decks});
             })
         },
@@ -39,6 +42,14 @@ const useDeckStore = create<DeckStore>()(set => ({
                 newObj[idx][option.position] = option.value;
                 return ({...state, decks:newObj});
             })
+        },
+        registerDeck: async (deck, codes) => {
+            try {
+                const result = await axios.post("http://127.0.0.1:3000/rest/decks", {deck, codes});
+                return;
+            } catch(e) {
+                throw e;
+            }
         }
     })
 )
@@ -65,6 +76,8 @@ type DeckType =  {
     s1?: string,
     s2?: string,
     s3?: string,
+    deckCodes?:string,
+    comments?:string
 }
 
 type UpdateOption = {

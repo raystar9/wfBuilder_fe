@@ -1,13 +1,21 @@
-import { MouseEvent, useContext } from "react"
-import { CharactersContext } from "@/context/context";
+import { MouseEvent, useContext, useEffect } from "react"
+//import { CharactersContext } from "@/context/context";
 import Image from "next/image";
+import { useCharacterStore } from "@/stores/characterStore";
 
 export default function CharacterList(props: { onCharacterClick?:(id:string) => void, option?: FilterOption }) {
-    const charactersContext = useContext(CharactersContext);
+    //const charactersContext = useContext(CharactersContext);
+    const characterStore = useCharacterStore();
+    const characters = characterStore.characters;
+    useEffect(() => {
+        if(characters.length == 0) {
+            characterStore.inquiryCharacters();
+        }
+    }, [])
     if (props.option?.type) {
         return (<>
             {
-                charactersContext.filter((item) => { return props.option?.type === item.type })
+                characters.filter((item) => { return props.option?.type === item.type })
                     .map((item, idx) => 
                         <Image key={idx} src={"/" + item.id + ".png"} width={100} height={100} alt=""/>
                 )
@@ -15,8 +23,8 @@ export default function CharacterList(props: { onCharacterClick?:(id:string) => 
         </>)
     } else {
         return (<>
-            {charactersContext.map((item, idx) =>
-                <Image id={`c-image-${item.id}`} src={"/" + item.id + ".png"} width={100} height={100} alt="" onClick={e => {props.onCharacterClick? props.onCharacterClick((e.target as HTMLImageElement).id.substring(8)): null}}/>
+            {characters.map((item, idx) =>
+                <Image key={idx} id={`c-image-${item.id}`} src={"/" + item.id + ".png"} width={100} height={100} alt="" onClick={e => {props.onCharacterClick? props.onCharacterClick((e.target as HTMLImageElement).id.substring(8)): null}}/>
             )}
         </>)
     }

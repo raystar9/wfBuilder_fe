@@ -1,83 +1,107 @@
-import { Component, ReactNode, useState, useEffect } from 'react';
+import { Component, ReactNode, useState, useEffect, useReducer, MouseEvent} from 'react';
 import styles from './deck.module.scss';
 import Image from 'next/image';
 import Modal from './modal';
 import { DeckType, useDeckStore } from './deck.module';
 
-function Deck(props: { type?: string, deckChangeHandler?: () => void }) {
-    const {decks, setDeck, updateDeck} = useDeckStore();
-    const [modalVisible, setModalVisible] = useState(false);
-    const [selectedImage, setSelectedImage] = useState({ index:0, position: "e1"});
+function Deck(props: { type?: string, deck?:DeckType, deckChangeHandler?: () => void, onRegisterComplete?:()=>void}) {
+    // Constructor
+    useEffect(() => {
+        if(props.type === "register") {
+            setDeck([{}]);
+        } else if(props.type === "update" && props.deck) {
+            setDeck([props.deck]);
+        } else if(props.type === "inquiry") {
+            setDeck([]);
+        }
+    }, [])
 
-    const openModalPopup = () => {
+    const {decks, setDeck, inquiryDecks, updateDeck, registerDeck} = useDeckStore();
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedPosition, setPosition] = useState({ index:0, itemPosition: "e1"});
+
+    function openModal() {
         setModalVisible(true);
     }
-
-    const closeModalPopup = () => {
+    function closeModal() {
         setModalVisible(false);
     }
-    const setSelectedImagePosition = (position: string) => {
-        setSelectedImage({index:0, position})
+
+    function setSelectedImagePosition(index:number, itemPosition: string) {
+        setPosition({index:index, itemPosition})
     }
 
-    const setCharacter = (id: string) => {
-        updateDeck({index:selectedImage.index, position:selectedImage.position as keyof DeckType, value:id})
+    function setCharacter (id: string) {
+        updateDeck({index:selectedPosition.index, position:selectedPosition.itemPosition as keyof DeckType, value:id})
     }
 
-    if(props?.type === "register" && decks?.length == 0) {
-        setDeck([{}]);
+    function deckSlotAttrFactory(index:number, deck:DeckType, characterPosition:number) {
+        return Object.assign({
+            main:deck[`m${characterPosition}`],
+            equipment:deck[`e${characterPosition}`],
+            soul:deck[`s${characterPosition}`],
+            unison:deck[`u${characterPosition}`],
+        }, props?.type === "register"? {
+            onMainClick:()=>{openModal(); setSelectedImagePosition(index, `m${characterPosition}`)},
+            onUnisonClick:()=> {openModal(); setSelectedImagePosition(index, `u${characterPosition}`)},
+            onSoulClick:()=> {openModal(); setSelectedImagePosition(index, `s${characterPosition}`)},
+            onEquipmentClick:()=> {openModal(); setSelectedImagePosition(index, `e${characterPosition}`)},
+        }:null)
     }
 
     return (
         <div>
             {
-            decks.map((deck, idx) =>
-                <ul key={idx} className={styles.deck}>
+            decks.map((deck, idx) =>{
+                return (<ul key={idx} className={styles.deck}>
                     <li>
-                        <DeckSlot position="1" main={deck.m1} unison={deck.u1} equipment={deck.e1} soul={deck.s1} type={props.type} onClick={openModalPopup} clickPositionHandler={setSelectedImagePosition}></DeckSlot>
+                        <DeckSlot {...deckSlotAttrFactory(idx, deck, 1)}></DeckSlot>
                     </li>
                     <li>
-                        <DeckSlot position="2" main={deck.m2} unison={deck.u2} equipment={deck.e2} soul={deck.s2} type={props.type} onClick={openModalPopup}></DeckSlot>
+                        <DeckSlot {...deckSlotAttrFactory(idx, deck, 2)}></DeckSlot>
                     </li>
                     <li>
-                        <DeckSlot position="3" main={deck.m3} unison={deck.u3} equipment={deck.e3} soul={deck.s3} type={props.type} onClick={openModalPopup}></DeckSlot>
+                        <DeckSlot {...deckSlotAttrFactory(idx, deck, 3)}></DeckSlot>
                     </li>
                 </ul>
             )
+            })}
+            {props.type === "register" && (<>
+            <Modal visible={modalVisible} closeModalHandler={()=>{closeModal()}} onImageClick={id => {setCharacter(id); closeModal();}}></Modal>
+            </>
+            )
             }
-            {props.type === "register" && <Modal visible={modalVisible} closeModalHandler={closeModalPopup} onImageClick={id => {setCharacter(id); closeModalPopup();}}></Modal>}
         </div>
     )
 }
+
 function DeckSlot(props: DeckSlotType) {
-    const onClickHandler = () => {}
     return (<div className={styles.deckSlot}>
-        <div className={styles.main} {...props.type === "register" && { onClick: event=>{props.onClick?props.onClick(event):null;props.clickPositionHandler?props.clickPositionHandler(`m${props.position}`):null;} }}>
+        <div className={styles.main} {...{ onClick: props.onMainClick}}>
             {props.main && <Image src={`/${props.main}.png`} width="100" height="100" alt="" className={styles.image} />}
         </div>
-        <div className={styles.equipment} {...props.type === "register" && { onClick: props.onClick }}>
+        <div className={styles.equipment} {...{ onClick: props.onEquipmentClick}}>
             {props.equipment && <Image src={`/${props.equipment}.png`} width="100" height="100" alt="" className={styles.image} />}
         </div>
-        <div className={styles.soul} {...props.type === "register" && { onClick: props.onClick }}>
+        <div className={styles.soul}  {...{ onClick: props.onSoulClick}}>
              {props.soul && <Image src={`/${props.soul}.png`} width="100" height="100" alt="" className={styles.image} />}
         </div>
-        <div className={styles.unison} {...props.type === "register" && { onClick: props.onClick }}>
+        <div className={styles.unison}  {...{ onClick: props.onUnisonClick}}>
              {props.unison && <Image src={`/${props.unison}.png`} width="100" height="100" alt="" className={styles.image} />}
         </div>
     </div>);
 }
 
 type DeckSlotType = {
-    position:string;
     main?: string,
     unison?: string,
     equipment?: string,
     soul?: string,
     type?: string,
-    onClick?: (event) => void
-    clickPositionHandler?: (id:string) => void
+    onMainClick?: (event:MouseEvent) => void,
+    onEquipmentClick?: (event:MouseEvent) => void,
+    onUnisonClick?: (event:MouseEvent) => void,
+    onSoulClick?: (event:MouseEvent) => void,
 }   
-
-
 
 export default Deck

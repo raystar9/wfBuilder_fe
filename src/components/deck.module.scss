@@ -16,14 +16,19 @@ ul.deck {
     position:relative;
     list-style-type: none;
     display: inline-block;
+    width: calc(100% - 10px);
+    max-width:500px;
+    margin-left: 5px;
+    margin-right: 5px;
+    padding: 0px;
     li {
         &:nth-child(1) {
             margin-left:0px;
         }
         display: inline-block;
-        width:150px;
+        width:32%;
         line-height: 0px;
-        margin-left:5px;
+        margin-left:2%;
     }
     div.deckSlot {
         border:1px solid #808080;

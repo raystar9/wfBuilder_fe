@@ -1,4 +1,14 @@
 import {createContext} from 'react';
+import charObj from '@/../public/character.json';
+import axios from 'axios';
+
+const keys = Object.keys(charObj);
+
+const characterList:{id:string, type:string}[] = []
+for(let i in keys) {
+    characterList.push({id:keys[i], type:charObj[keys[i]][3]})
+}
+
 
 const CategoriesContext = createContext({
     lCategories: [
@@ -27,14 +37,7 @@ const CategoriesContext = createContext({
         { codeKind: "S_CATEGORY", key: "010104", relKey: "0101", name: "0101testC" },
         { codeKind: "S_CATEGORY", key: "010105", relKey: "0101", name: "0101testD" },
     ]})
-const CharactersContext = createContext([{
-    id:"10",
-    type:"1",
-},{
-    id:"101",
-    type:"1",
-},{
-    id:"102",
-    type:"1",
-}])
+    
+const CharactersContext = createContext(characterList)
+
 export {CategoriesContext, CharactersContext};
