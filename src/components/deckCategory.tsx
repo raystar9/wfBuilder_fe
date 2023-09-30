@@ -1,5 +1,4 @@
 import { Component, ReactNode, useContext, useState, useReducer, useEffect } from "react";
-import { CategoriesContext } from "@/context/context";
 import { useCategoryStore, Code } from "@/stores/codeStore";
 
 function reducer(state, action) {
