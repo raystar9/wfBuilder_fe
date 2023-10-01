@@ -1,16 +1,33 @@
-import Deck from "@/components/deck";
-import { DeckType, useDeckStore } from "@/components/deck.module";
-import DeckCategory from "@/components/deckCategory";
-import { Category, useCategoryStore } from "@/stores/codeStore";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 import { useRouter } from 'next/navigation';
+import axios from "axios";
 
-export default function Register() {
+import Decks from "@/components/deck";
+import DeckCategory from "@/components/deckCategory";
+import { useDeckStore, Deck } from '@/stores/deckStore'
+import { wfContext } from "@/context/context";
+import { Category, useCategoryStore } from "@/stores/categoryStore";
+import { useItemStore } from "@/stores/itemStore";
+
+export const getStaticProps = (async () => {
+    const largeCategories = (await axios.get("http://127.0.0.1:3000/rest/codes/01")).data;
+    const mediumCategories = (await axios.get("http://127.0.0.1:3000/rest/codes/02")).data;
+    const smallCategories = (await axios.get("http://127.0.0.1:3000/rest/codes/03")).data;
+    const items = (await axios.get("http://127.0.0.1:3000/rest/items")).data;
+    const characters = (await axios.get("http://127.0.0.1:3000/rest/characters")).data;
+    return {props: {categories: {largeCategories,mediumCategories,smallCategories}, items, characters}}
+}) satisfies GetStaticProps
+
+export default function Register(props:InferGetStaticPropsType<typeof getStaticProps>) {
+    wfContext.createCategoryContext(props.categories);
+    wfContext.createItemContext(props.items);
+    wfContext.createCharacterContext(props.characters);
     const router = useRouter();
-    const {decks, registerDeck} = useDeckStore();
-    //const categoryStore = useCategoryStore();
+    const {deck, registerDeck} = useDeckStore();
+    const {items, inquiryItems} = useItemStore();
     const categoryStore = useCategoryStore();
 
-    async function registerDeckToServer(deck:DeckType, categories:Category) {
+    async function registerDeckToServer(deck:Deck, categories:Category) {
         try {
             const codes = new Array();
             if(categories.currentLargeCategory){
@@ -41,8 +58,8 @@ export default function Register() {
     }
 
     return (<>
-        <DeckCategory />
-        <Deck type="register"></Deck>
-        <button onClick={() => {registerDeckToServer(decks[0], categoryStore)}}>등록하기</button>
+        <DeckCategory/>
+        <Decks type="register"></Decks>
+        <button onClick={() => {registerDeckToServer(deck, categoryStore)}}>등록하기</button>
     </>)
 }

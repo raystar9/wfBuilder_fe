@@ -12,14 +12,15 @@
     display:block;
 }
 .modalMain {
-    width:80%;
-    margin-top:10%;
-    margin-left:10%;
-    margin-right:10%;
+    width: 80%;
+    margin-top: 3%;
+    margin-left: 10%;
+    margin-right: 10%;
     background-color: white;
-    height:100px;
 }
 .modalBody {
+    overflow-y: auto;
+    height: 85%;
 
 }
 .buttonDiv {

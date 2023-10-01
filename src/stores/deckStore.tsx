@@ -2,11 +2,11 @@ import {create} from 'zustand'
 import axios from 'axios';
 
 type DeckStore = {
-    decks:DeckType[],
-    inquiryDecks: (inquiryCondition:InquiryCondition) => void,
-    setDeck: (decks:DeckType[]) => void,
+    deck:Deck,
+    // inquiryDecks: (inquiryCondition:InquiryCondition) => void,
+    setDeck: (deck:Deck) => void,
     updateDeck: (option:UpdateOption) => void,
-    registerDeck: (deck:DeckType, codes?:CodeType[]) => Promise<void>
+    registerDeck: (deck:Deck, codes?:CodeType[]) => Promise<void>
 }
 
 type CodeType = {
@@ -15,32 +15,20 @@ type CodeType = {
 }
 
 const useDeckStore = create<DeckStore>()(set => ({
-        decks:[
-        ],
-        inquiryDecks: async (inquiryCondition:InquiryCondition) => {
-            try {
-                const result = await axios.get("http://127.0.0.1:3000/rest/decks?" 
-                + "largeCategory=" + inquiryCondition.largeCategory
-                + "&mediumCategory=" + inquiryCondition.mediumCategory
-                + "&smallCategory=" + inquiryCondition.smallCategory)
-                set(() => ({decks:result.data}));
-            } catch(e) {
-            }
-        },
-        setDeck:(decks: DeckType[]) => {
+        deck:{},
+        setDeck:(deck: Deck) => {
             set((state) => {
-                return ({...state, decks});
+                return ({...state, deck});
             })
         },
         updateDeck: (option:UpdateOption) => {
-            const idx = option.index?option.index:0;
             set(state => {
-                if(!state.decks[idx]) {
+                if(!state.deck) {
                     return state;
                 }
-                let newObj:DeckType[] = [...state.decks];
-                newObj[idx][option.position] = option.value;
-                return ({...state, decks:newObj});
+                let newObj:Deck = {...state.deck};
+                newObj[option.position] = option.value;
+                return ({...state, deck:newObj});
             })
         },
         registerDeck: async (deck, codes) => {
@@ -55,7 +43,7 @@ const useDeckStore = create<DeckStore>()(set => ({
 )
 
 export {useDeckStore} 
-export type {DeckType}
+export type {Deck}
 
 type InquiryCondition = {
     largeCategory?:string;
@@ -63,7 +51,7 @@ type InquiryCondition = {
     smallCategory?:string;
 }
 
-type DeckType =  {
+type Deck =  {
     m1?: string,
     m2?: string,
     m3?: string,
@@ -81,7 +69,6 @@ type DeckType =  {
 }
 
 type UpdateOption = {
-    position: keyof DeckType;
+    position: keyof Deck;
     value:string;
-    index?:number;
 }

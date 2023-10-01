@@ -1,23 +1,43 @@
-import { useCategoryStore } from '@/stores/codeStore';
-import Deck from '../components/deck';
-import DeckCategory from '../components/deckCategory';
-import {useDeckStore} from '@/components/deck.module'
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import Link from 'next/link';
+import axios from 'axios';
 
-export default function Main() {
-    //const { selectedCategory, storeLCategory } = useCategoryStore();
+import Decks from '@/components/deck';
+import DeckCategory from '@/components/deckCategory';
+import { useCategoryStore } from '@/stores/categoryStore';
+// import { useDeckStore } from '@/stores/deckStore'
+import { wfContext } from '@/context/context';
+import useSWR, {SWRConfig, unstable_serialize} from 'swr';
+import { useDeck } from '@/swr/useDeck';
+
+export const getStaticProps = (async context => {
+    const largeCategories = (await axios.get("http://127.0.0.1:3000/rest/codes/01")).data;
+    const mediumCategories = (await axios.get("http://127.0.0.1:3000/rest/codes/02")).data;
+    const smallCategories = (await axios.get("http://127.0.0.1:3000/rest/codes/03")).data;
+    const items = (await axios.get("http://127.0.0.1:3000/rest/items")).data;
+    const characters = (await axios.get("http://127.0.0.1:3000/rest/characters")).data;
+    return { props: { categories: { largeCategories, mediumCategories, smallCategories }, items, characters, fallback:[unstable_serialize(["decks", "", "", ""])] } }
+}) satisfies GetStaticProps
+
+export default function Main(props: InferGetStaticPropsType<typeof getStaticProps>) {
     const categoryStore = useCategoryStore()
-    const inquiryDecks = useDeckStore().inquiryDecks;
+    // const inquiryDecks = useDeckStore().inquiryDecks;
+    wfContext.createCategoryContext(props.categories);
+    wfContext.createItemContext(props.items);
+    wfContext.createCharacterContext(props.characters);
+    const {mutate} = useDeck();
 
     const inqCond = {
-        largeCategory:categoryStore.currentLargeCategory,
-        mediumCategory:categoryStore.currentMediumCategory,
-        smallCategory:categoryStore.currentSmallCategory,
+        largeCategory: categoryStore.currentLargeCategory,
+        mediumCategory: categoryStore.currentMediumCategory,
+        smallCategory: categoryStore.currentSmallCategory,
     }
     return <>
         <DeckCategory />
-        <button onClick={() => {inquiryDecks(inqCond)}}>조회</button>
+        
+        {/* <button onClick={() => { inquiryDecks(inqCond) }}>조회</button> */}
+        {/* <button onClick={() => {mutate([categoryStore.currentLargeCategory, categoryStore.currentMediumCategory, categoryStore.currentSmallCategory])}}>조회</button> */}
         <Link rel="stylesheet" href="/register" ><button>등록</button></Link>
-        <Deck type='inquiry'/>
+        <Decks type='inquiry' />
     </>
 }
