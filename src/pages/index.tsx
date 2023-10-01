@@ -12,11 +12,11 @@ import { useDeck } from '@/swr/useDeck';
 import serverConfig from '@/config';
 
 export const getStaticProps = (async context => {
-    const largeCategories = (await axios.get(`http://${serverConfig.publicIp}:${serverConfig.backendPort}/rest/codes/01`)).data;
-    const mediumCategories = (await axios.get(`http://${serverConfig.publicIp}:${serverConfig.backendPort}/rest/codes/02`)).data;
-    const smallCategories = (await axios.get(`http://${serverConfig.publicIp}:${serverConfig.backendPort}/rest/codes/03`)).data;
-    const items = (await axios.get(`http://${serverConfig.publicIp}:${serverConfig.backendPort}/rest/items`)).data;
-    const characters = (await axios.get(`http://${serverConfig.publicIp}:${serverConfig.backendPort}/rest/characters`)).data;
+    const largeCategories = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/codes/01`)).data;
+    const mediumCategories = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/codes/02`)).data;
+    const smallCategories = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/codes/03`)).data;
+    const items = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/items`)).data;
+    const characters = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/characters`)).data;
     return { props: { categories: { largeCategories, mediumCategories, smallCategories }, items, characters, fallback:[unstable_serialize(["decks", "", "", ""])] } }
 }) satisfies GetStaticProps
 
