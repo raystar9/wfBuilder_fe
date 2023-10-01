@@ -17,15 +17,22 @@
     margin-left: 10%;
     margin-right: 10%;
     background-color: white;
+    position: relative;
+    display: inline-block;
+    height: 90%;
 }
 .modalBody {
+    height: calc(100% - 50px);
     overflow-y: auto;
-    height: 85%;
-
+    position: relative;
+    display: block;
+    padding: 5px;
+    text-align: center;
 }
 .buttonDiv {
     text-align: right;
     width:100%;
+    height:35px;
 }
 .closeButton{
 }

@@ -20,14 +20,14 @@ export default function CharacterList(props: { onCharacterClick?:(id:string) => 
             {
                 characters.filter((item) => { return props.option?.type === item.type })
                     .map((item, idx) => 
-                        <Image loading="eager" key={idx} src={`/characters/${item.id}.png`} width={106} height={106} alt=""/>
+                        <Image className={styles.image} loading="eager" key={idx} src={`/characters/${item.id}.png`} width={106} height={106} alt=""/>
                 )
             }
         </>)
     } else {
         return (<>
             {characters.map((item, idx) =>
-                <Image loading="eager" key={idx} id={`c-image-${item.id}`} src={`/characters/${item.id}.png`} width={106} height={106} alt="" onClick={e => {props.onCharacterClick? props.onCharacterClick((e.target as HTMLImageElement).id.substring(8)): null}}/>
+                <Image className={styles.image} loading="eager" key={idx} id={`c-image-${item.id}`} src={`/characters/${item.id}.png`} width={106} height={106} alt="" onClick={e => {props.onCharacterClick? props.onCharacterClick((e.target as HTMLImageElement).id.substring(8)): null}}/>
             )}
         </>)
     }

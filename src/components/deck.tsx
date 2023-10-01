@@ -8,13 +8,59 @@ import axios from 'axios';
 import { useDeck } from '@/swr/useDeck';
 import { useCategoryStore } from '@/stores/categoryStore';
 
-function Decks(props: { type?: string, deckChangeHandler?: () => void, onRegisterComplete?:()=>void}) {
+    
+function deckSlotAttrFactory(index:number, deck:Deck, characterPosition:number) {
+    return Object.assign({
+        main:deck[`m${characterPosition}`],
+        equipment:deck[`e${characterPosition}`],
+        soul:deck[`s${characterPosition}`],
+        unison:deck[`u${characterPosition}`],
+    })
+}
+
+
+function Decks(props: { type?: string}) {
+    if(props.type === "inquiry") {
+        return <InquiryDecks></InquiryDecks>
+    } else if(props.type === "register") {
+        return <RegisterDecks></RegisterDecks>
+    }
+}
+
+function InquiryDecks() {
+    const category = useCategoryStore();
+    const {decks, error, isLoading} = useDeck(category.currentLargeCategory, category.currentMediumCategory, category.currentSmallCategory)
+    if(error) {
+        return <></>
+    }
+    if(isLoading) {
+        return <></>
+    }
+    return (
+        <div>{
+            decks.map((deck, idx) =>{
+                return (<ul key={idx} className={styles.deck}>
+                    <li>
+                        <DeckSlot {...deckSlotAttrFactory(idx, deck, 1)}></DeckSlot>
+                    </li>
+                    <li>
+                        <DeckSlot {...deckSlotAttrFactory(idx, deck, 2)}></DeckSlot>
+                    </li>
+                    <li>
+                        <DeckSlot {...deckSlotAttrFactory(idx, deck, 3)}></DeckSlot>
+                    </li>
+                </ul>
+                )
+            })
+        }</div>
+    )
+}
+function RegisterDecks() {
     const [characterModalVisible, setCharacterModalVisible] = useState(false);
     const [itemModalVisible, setItemModalVisible] = useState(false);
-    const [selectedPosition, setPosition] = useState({ index:0, itemPosition: "e1"});
-    const category = useCategoryStore();
+    const [selectedPosition, setPosition] = useState({ itemPosition: "e1"});
     const {deck, updateDeck} = useDeckStore();
-    
+
     function openCharacterModal() {
         setCharacterModalVisible(true);
     }
@@ -28,71 +74,38 @@ function Decks(props: { type?: string, deckChangeHandler?: () => void, onRegiste
         setItemModalVisible(false);
     }
     
-    function setSelectedImagePosition(index:number, itemPosition: string) {
-        setPosition({index:index, itemPosition})
+    function setSelectedImagePosition(itemPosition: string) {
+        setPosition({itemPosition})
     }
     
     function setDeckItem (id: string) {
         updateDeck({position:selectedPosition.itemPosition as keyof Deck, value:id})
     }
-    
-    function deckSlotAttrFactory(index:number, deck:Deck, characterPosition:number) {
-        return Object.assign({
-            main:deck[`m${characterPosition}`],
-            equipment:deck[`e${characterPosition}`],
-            soul:deck[`s${characterPosition}`],
-            unison:deck[`u${characterPosition}`],
-        }, props?.type === "register"? {
-            onMainClick:()=>{openCharacterModal(); setSelectedImagePosition(index, `m${characterPosition}`)},
-            onUnisonClick:()=> {openCharacterModal(); setSelectedImagePosition(index, `u${characterPosition}`)},
-            onSoulClick:()=> {openItemModal(); setSelectedImagePosition(index, `s${characterPosition}`)},
-            onEquipmentClick:()=> {openItemModal(); setSelectedImagePosition(index, `e${characterPosition}`)},
-        }:null)
-    }
-    
-    if(props.type === "inquiry") {
-        const {decks, error, isLoading} = useDeck(category.currentLargeCategory, category.currentMediumCategory, category.currentSmallCategory)
-        if(error) {
-            return <></>
+
+    function deckSlotEventFactory(characterPosition:number) {
+        return {
+            onMainClick:()=>{openCharacterModal(); setSelectedImagePosition(`m${characterPosition}`)},
+            onUnisonClick:()=> {openCharacterModal(); setSelectedImagePosition(`u${characterPosition}`)},
+            onSoulClick:()=> {openItemModal(); setSelectedImagePosition(`s${characterPosition}`)},
+            onEquipmentClick:()=> {openItemModal(); setSelectedImagePosition(`e${characterPosition}`)},
         }
-        if(isLoading) {
-            return <></>
-        }
-        return (
-            <div>{
-                decks.map((deck, idx) =>{
-                    return (<ul key={idx} className={styles.deck}>
-                        <li>
-                            <DeckSlot {...deckSlotAttrFactory(idx, deck, 1)}></DeckSlot>
-                        </li>
-                        <li>
-                            <DeckSlot {...deckSlotAttrFactory(idx, deck, 2)}></DeckSlot>
-                        </li>
-                        <li>
-                            <DeckSlot {...deckSlotAttrFactory(idx, deck, 3)}></DeckSlot>
-                        </li>
-                    </ul>
-                    )
-                })
-            }</div>
-        )
-    } else if(props.type === "register") {
-        const {deck} = useDeckStore();
-        return (<><ul className={styles.deck}>
-            <li>
-                <DeckSlot {...deckSlotAttrFactory(0, deck, 1)}></DeckSlot>
-            </li>
-            <li>
-                <DeckSlot {...deckSlotAttrFactory(0, deck, 2)}></DeckSlot>
-            </li>
-            <li>
-                <DeckSlot {...deckSlotAttrFactory(0, deck, 3)}></DeckSlot>
-            </li>
-        </ul>
-        <Modal type="characters" visible={characterModalVisible} closeModalHandler={()=>{closeCharacterModal()}} onImageClick={id => {setDeckItem(id); closeCharacterModal();}}></Modal>
-        <Modal type="items" visible={itemModalVisible} closeModalHandler={()=>{closeItemModal()}} onImageClick={id => {setDeckItem(id); closeItemModal();}}></Modal>
-        </>)
     }
+    return (<>
+    <ul className={styles.deck}>
+        <li>
+            <DeckSlot {...deckSlotAttrFactory(0, deck, 1)} {...deckSlotEventFactory(1)}></DeckSlot>
+        </li>
+        <li>
+            <DeckSlot {...deckSlotAttrFactory(0, deck, 2)} {...deckSlotEventFactory(2)}></DeckSlot>
+        </li>
+        <li>
+            <DeckSlot {...deckSlotAttrFactory(0, deck, 3)} {...deckSlotEventFactory(3)}></DeckSlot>
+        </li>
+    </ul>
+    <Modal type="characters" visible={characterModalVisible} closeModalHandler={()=>{closeCharacterModal()}} onImageClick={id => {setDeckItem(id); closeCharacterModal();}}></Modal>
+    <Modal type="items" visible={itemModalVisible} closeModalHandler={()=>{closeItemModal()}} onImageClick={id => {setDeckItem(id); closeItemModal();}}></Modal>
+    </>
+    )
 }
 
 function DeckSlot(props: DeckSlotType) {

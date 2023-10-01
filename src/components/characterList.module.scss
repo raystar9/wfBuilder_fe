@@ -1,0 +1,21 @@
+$breakpoint-mobile: 335px;
+$breakpoint-tablet: 758px;
+$breakpoint-desktop: 1024px;
+
+.image {
+  @media (max-width: #{$breakpoint-tablet - 1px}){
+    width:48px;
+    height:48px;
+  }
+  @media (min-width: #{$breakpoint-tablet}) and (max-width: #{$breakpoint-desktop - 1px}){
+    width:72px;
+    height:72px;
+  }
+  @media (min-width: #{$breakpoint-desktop}){
+    width:106px;
+    height:106px;
+    padding:2px;
+    border:1px solid #888888;
+    border-radius: 4px;
+  }
+}
