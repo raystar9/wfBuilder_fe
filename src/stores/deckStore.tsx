@@ -1,5 +1,6 @@
 import {create} from 'zustand'
 import axios from 'axios';
+import serverConfig from '@/config';
 
 type DeckStore = {
     deck:Deck,
@@ -33,7 +34,7 @@ const useDeckStore = create<DeckStore>()(set => ({
         },
         registerDeck: async (deck, codes) => {
             try {
-                const result = await axios.post("http://127.0.0.1:3000/rest/decks", {deck, codes});
+                const result = await axios.post(`http://${serverConfig.publicIp}:${serverConfig.backendPort}/rest/decks`, {deck, codes});
                 return;
             } catch(e) {
                 throw e;
