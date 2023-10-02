@@ -9,6 +9,7 @@ import { wfContext } from "@/context/context";
 import { Category, useCategoryStore } from "@/stores/categoryStore";
 import { useItemStore } from "@/stores/itemStore";
 import serverConfig from '@/config';
+import Link from "next/link";
 
 export const getStaticProps = (async () => {
     const largeCategories = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/codes/01`)).data;
@@ -16,7 +17,7 @@ export const getStaticProps = (async () => {
     const smallCategories = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/codes/03`)).data;
     const items = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/items`)).data;
     const characters = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/characters`)).data;
-    return {props: {categories: {largeCategories,mediumCategories,smallCategories}, items, characters}}
+    return {props: {categories: {largeCategories,mediumCategories,smallCategories}, items, characters}, revalidate:3600}
 }) satisfies GetStaticProps
 
 export default function Register(props:InferGetStaticPropsType<typeof getStaticProps>) {
@@ -59,8 +60,11 @@ export default function Register(props:InferGetStaticPropsType<typeof getStaticP
     }
 
     return (<>
+        <div>
         <DeckCategory/>
+        </div>
         <Decks type="register"></Decks>
         <button onClick={() => {registerDeckToServer(deck, categoryStore)}}>등록하기</button>
+        <Link rel="stylesheet" href="/" ><button>돌아가기</button></Link>
     </>)
 }

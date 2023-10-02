@@ -3,36 +3,40 @@ import { MouseEvent, useContext, useEffect } from "react"
 import Image from "next/image";
 // import { useCharacterStore } from "@/stores/characterStore";
 import styles from './characterList.module.scss';
-import { wfContext } from "@/context/context";
+import { Character, wfContext } from "@/context/context";
+import TypeSelectBar from "./typeSelectBar";
 
-export default function CharacterList(props: { onCharacterClick?:(id:string) => void, option?: FilterOption }) {
+
+export default function CharacterList(props: { onCharacterClick?: (id: string) => void, option?: FilterOption }) {
     const characters = useContext(wfContext.getCharacterContext());
-    // const characterStore = useCharacterStore();
+    return <>
+        <CharactersBody characters={characters} onCharacterClick={props.onCharacterClick} option={props.option}></CharactersBody>
+    </>
+}
 
-    // const characters = charactersContext.characters;
-    // useEffect(() => {
-    //     if(characters.length == 0) {
-    //         charactersContext.inquiryCharacters();
-    //     }
-    // }, [])
+function CharactersBody(props: { characters: Character[], onCharacterClick?: (id: string) => void, option?: FilterOption }) {
     if (props.option?.type) {
         return (<>
             {
-                characters.filter((item) => { return props.option?.type === item.type })
-                    .map((item, idx) => 
-                        <Image className={styles.image} loading="eager" key={idx} src={`/characters/${item.id}.png`} width={106} height={106} alt=""/>
-                )
+                props.characters.filter((item) => { return props.option?.type === item.type }).map((item, idx) =>
+                        <EachCharacter character={item} key={idx} onCharacterClick={props.onCharacterClick}></EachCharacter>
+                    )
             }
         </>)
     } else {
         return (<>
-            {characters.map((item, idx) =>
-                <Image className={styles.image} loading="eager" key={idx} id={`c-image-${item.id}`} src={`/characters/${item.id}.png`} width={106} height={106} alt="" onClick={e => {props.onCharacterClick? props.onCharacterClick((e.target as HTMLImageElement).id.substring(8)): null}}/>
+            {props.characters.map((item, idx) =>
+                <EachCharacter character={item} key={idx} onCharacterClick={props.onCharacterClick}></EachCharacter>
             )}
         </>)
     }
+
+}
+
+function EachCharacter(props:{character:Character, onCharacterClick?: (id: string) => void}) {
+    return <img className={styles.image} id={`c-image-${props.character.id}`} src={`/characters/${props.character.id}.png`} alt="" onClick={e => { props.onCharacterClick ? props.onCharacterClick(props.character.id) : null }} />
 }
 
 type FilterOption = {
-    type?:string
+    type?: string
 }

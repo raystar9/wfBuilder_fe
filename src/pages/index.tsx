@@ -6,7 +6,7 @@ import Decks from '@/components/deck';
 import DeckCategory from '@/components/deckCategory';
 import { useCategoryStore } from '@/stores/categoryStore';
 // import { useDeckStore } from '@/stores/deckStore'
-import { wfContext } from '@/context/context';
+import { Character, Code, Item, wfContext } from '@/context/context';
 import useSWR, {SWRConfig, unstable_serialize} from 'swr';
 import { useDeck } from '@/swr/useDeck';
 import serverConfig from '@/config';
@@ -17,7 +17,7 @@ export const getStaticProps = (async context => {
     const smallCategories = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/codes/03`)).data;
     const items = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/items`)).data;
     const characters = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/characters`)).data;
-    return { props: { categories: { largeCategories, mediumCategories, smallCategories }, items, characters, fallback:[unstable_serialize(["decks", "", "", ""])] } }
+    return { props: { categories: { largeCategories, mediumCategories, smallCategories }, items, characters, fallback:[unstable_serialize(["decks", "", "", ""])] }, revalidate:3600 }
 }) satisfies GetStaticProps
 
 export default function Main(props: InferGetStaticPropsType<typeof getStaticProps>) {
@@ -26,7 +26,6 @@ export default function Main(props: InferGetStaticPropsType<typeof getStaticProp
     wfContext.createCategoryContext(props.categories);
     wfContext.createItemContext(props.items);
     wfContext.createCharacterContext(props.characters);
-    const {mutate} = useDeck();
 
     const inqCond = {
         largeCategory: categoryStore.currentLargeCategory,

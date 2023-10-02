@@ -19,7 +19,7 @@ export default function DeckCategory() {
         </select>
     </>)
     const MCategory = (<>
-        <select name="" id="" onChange={event => { categoryStore.setCurrentMediumCategory(event.target.value)}} value={categoryStore.currentMediumCategory}>
+        <select name="" id="" onChange={event => { categoryStore.setCurrentMediumCategory(event.target.value)}} value={categoryStore.currentMediumCategory} style={{minWidth:"100px"}}>
             <option key="0" value="" ></option>
             {
                 categories.mediumCategories.filter(item => { return item.relKey == categoryStore.currentLargeCategory }).map((item: Code, idx: number) => {
@@ -43,9 +43,9 @@ export default function DeckCategory() {
     //         }
     //     </select>
     // </>)
-    return (<>
+    return (<div style={{"display":"inline-block"}}>
         {LCategory}
         {MCategory}
         {/* {SCategory} */}
-    </>);
+    </div>);
 }

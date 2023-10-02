@@ -111,16 +111,16 @@ function RegisterDecks() {
 function DeckSlot(props: DeckSlotType) {
     return (<div className={styles.deckSlot}>
         <div className={styles.main} {...{ onClick: props.onMainClick}}>
-            {props.main && <Image src={`/characters/${props.main}.png`} width="100" height="100" alt="" className={styles.image} />}
+            {props.main && <img src={`/characters/${props.main}.png`} alt="" className={styles.image} />}
         </div>
         <div className={styles.equipment} {...{ onClick: props.onEquipmentClick}}>
-            {props.equipment && <Image src={`/items/${props.equipment}.png`} width="100" height="100" alt="" className={styles.image} style={{imageRendering:"pixelated"}}/>}
+            {props.equipment && <img src={`/items/${props.equipment}.png`}  alt="" className={styles.image} style={{imageRendering:"pixelated"}}/>}
         </div>
         <div className={styles.soul}  {...{ onClick: props.onSoulClick}}>
-             {props.soul && <Image src={`/items/${props.soul}.png`} width="100" height="100" alt="" className={styles.image}  style={{imageRendering:"pixelated"}}/>}
+             {props.soul && <img src={`/items/${props.soul}.png`} alt="" className={styles.image} style={{imageRendering:"pixelated"}}/>}
         </div>
         <div className={styles.unison}  {...{ onClick: props.onUnisonClick}}>
-             {props.unison && <Image src={`/characters/${props.unison}.png`} width="100" height="100" alt="" className={styles.image} />}
+             {props.unison && <img src={`/characters/${props.unison}.png`} alt="" className={styles.image} />}
         </div>
     </div>);
 }

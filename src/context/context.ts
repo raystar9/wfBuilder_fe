@@ -31,7 +31,7 @@ class WFContext {
 const wfContext = new WFContext();
 
 //const createCategoryContext = (init:Category) => {return createContext<Category>(init)}
-export type {Code, Item}
+export type {Code, Item, Character}
 export {wfContext}
 
 type Category = {
