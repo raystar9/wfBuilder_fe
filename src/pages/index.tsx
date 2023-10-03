@@ -10,6 +10,7 @@ import { Character, Code, Item, wfContext } from '@/context/context';
 import useSWR, {SWRConfig, unstable_serialize} from 'swr';
 import { useDeck } from '@/swr/useDeck';
 import serverConfig from '@/config';
+import { useDeckStore } from '@/stores/deckStore';
 
 export const getStaticProps = (async context => {
     const largeCategories = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/codes/01`)).data;
@@ -22,10 +23,12 @@ export const getStaticProps = (async context => {
 
 export default function Main(props: InferGetStaticPropsType<typeof getStaticProps>) {
     const categoryStore = useCategoryStore()
+    const deckStore = useDeckStore();
     // const inquiryDecks = useDeckStore().inquiryDecks;
     wfContext.createCategoryContext(props.categories);
     wfContext.createItemContext(props.items);
     wfContext.createCharacterContext(props.characters);
+    
 
     const inqCond = {
         largeCategory: categoryStore.currentLargeCategory,
@@ -37,7 +40,7 @@ export default function Main(props: InferGetStaticPropsType<typeof getStaticProp
         
         {/* <button onClick={() => { inquiryDecks(inqCond) }}>조회</button> */}
         {/* <button onClick={() => {mutate([categoryStore.currentLargeCategory, categoryStore.currentMediumCategory, categoryStore.currentSmallCategory])}}>조회</button> */}
-        <Link rel="stylesheet" href="/register" ><button>등록</button></Link>
+        <Link rel="stylesheet" href="/register" ><button onClick={e => {deckStore.setDeck({})}}>등록</button></Link>
         <Decks type='inquiry' />
     </>
 }

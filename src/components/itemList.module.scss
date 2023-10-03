@@ -1,8 +1,17 @@
-$breakpoint-mobile: 335px;
-$breakpoint-tablet: 758px;
-$breakpoint-desktop: 1024px;
+.itemsContainer {
+  text-align: left;
+  width:auto;
+}
 .imageContainer {
-  background-image: url("/background/5.png");
+  &.star5{
+    background-image: url("/background/5.png");
+  }
+  &.star4{
+    background-image: url("/background/4.png");
+  }
+  &.star3,&.star2,&.star1{
+    background-image: url("/background/3.png");
+  }
   background-size: contain;
   border:1px solid #888888;
   border-radius: 4px;

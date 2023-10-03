@@ -64,7 +64,9 @@ export default function Register(props:InferGetStaticPropsType<typeof getStaticP
         <DeckCategory/>
         </div>
         <Decks type="register"></Decks>
-        <button onClick={() => {registerDeckToServer(deck, categoryStore)}}>등록하기</button>
+        <div style={{display:"block"}}>
+        <button onClick={() => {const ok = confirm("등록하시겠습니까?");  if(ok) registerDeckToServer(deck, categoryStore)}}>등록하기</button>
         <Link rel="stylesheet" href="/" ><button>돌아가기</button></Link>
+        </div>
     </>)
 }

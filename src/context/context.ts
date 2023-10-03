@@ -15,7 +15,7 @@ class WFContext {
   }
 
   createCharacterContext = (init:Item[]) => {
-    this.characterContext = createContext<Item[]>(init)
+    this.characterContext = createContext<Character[]>(init)
   }
 
   // createDeckContext = (init:Category) => {
@@ -44,6 +44,7 @@ type Item = {
   id:string
   name:string
   type:string
+  stars:string
 }
 
 type Code = {
@@ -57,4 +58,5 @@ type Character = {
     id: string
     type: string
     name: string
+    stars:string
 }
