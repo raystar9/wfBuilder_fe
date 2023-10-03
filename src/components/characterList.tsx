@@ -45,7 +45,7 @@ export default function CharacterList(props: { onCharacterClick?: (id: string) =
     
     return (<div>
         {_characters.map((item, idx) =>
-        <img className={styles.image} id={`c-image-${item.id}`} src={`/characters/${item.id}.png`} alt="" onClick={e => { props.onCharacterClick ? props.onCharacterClick(item.id) : null }} />
+        <img key={idx} className={styles.image} id={`c-image-${item.id}`} src={`/characters/${item.id}.png`} alt="" onClick={e => { props.onCharacterClick ? props.onCharacterClick(item.id) : null }} />
         )}
     </div>)
 }
