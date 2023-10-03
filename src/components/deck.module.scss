@@ -13,6 +13,8 @@
 $deckslot-item-border-width :1px;
 
 ul.deck {
+    background-color: $blue-theme-color-normal;
+    //padding:10px;
     position:relative;
     list-style-type: none;
     display: inline-block;
@@ -20,7 +22,9 @@ ul.deck {
     max-width:500px;
     margin-left: 5px;
     margin-right: 5px;
-    padding: 0px;
+    padding: 10px;
+    border: 1px solid $border-color-normal;
+    border-radius: 4px;
     li {
         &:nth-child(1) {
             margin-left:0px;
@@ -31,13 +35,14 @@ ul.deck {
         margin-left:2%;
     }
     div.deckSlot {
-        border:1px solid #808080;
+        // border:1px solid #808080;
         display: inline-block;
         width:100%;
         height:100%;
         div {
             border:1px solid #777777;
             border-radius: 5px;
+            background-color:$blue-theme-color-light;
             padding:3px;
         }
         
