@@ -39,12 +39,11 @@ export default function Main(props: InferGetStaticPropsType<typeof getStaticProp
     }
     
     async function inquiryDecks(inqCond) {
-        const decks = (await axios.get(`http://localhost:3002/api/decks?largeCategory=${inqCond.largeCategory}&mediumCategory=${inqCond.mediumCategory}&smallCategory=${inqCond.smallCategory}&`)).data
+        const decks = (await axios.get(`http://${serverConfig.publicAddr}:3002/api/decks?largeCategory=${inqCond.largeCategory}&mediumCategory=${inqCond.mediumCategory}&smallCategory=${inqCond.smallCategory}&`)).data
         setDecks(() =>  decks)
     }
     return <>
         <DeckCategory />
-        
         <button onClick={() => { inquiryDecks(inqCond) }}>조회</button>
         {/* <button onClick={() => {mutate([categoryStore.currentLargeCategory, categoryStore.currentMediumCategory, categoryStore.currentSmallCategory])}}>조회</button> */}
         <Link rel="stylesheet" href="/register" ><button onClick={e => {deckStore.setDeck({})}}>등록</button></Link>
