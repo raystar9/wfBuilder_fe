@@ -34,7 +34,7 @@ const useDeckStore = create<DeckStore>()(set => ({
         },
         registerDeck: async (deck, codes) => {
             try {
-                const result = await axios.post(`http://${serverConfig.publicAddr}:${serverConfig.backendPort}/rest/decks`, {deck, codes});
+                const result = await axios.post(`http://${serverConfig.publicAddr}:${serverConfig.frontendPort}/api/decks`, {deck, codes});
                 return;
             } catch(e) {
                 throw e;
