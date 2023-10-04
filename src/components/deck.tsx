@@ -5,7 +5,7 @@ import Modal from './modal';
 import {Deck, useDeckStore} from '@/stores/deckStore'
 import useSWR from 'swr'
 import axios from 'axios';
-import { useDeck } from '@/swr/useDeck';
+// import { useDeck } from '@/swr/useDeck';
 import { useCategoryStore } from '@/stores/categoryStore';
 
     
@@ -19,26 +19,27 @@ function deckSlotAttrFactory(index:number, deck:Deck, characterPosition:number) 
 }
 
 
-function Decks(props: { type?: string}) {
+function Decks(props: {decks?:Deck[], type?: string}) {
     if(props.type === "inquiry") {
-        return <InquiryDecks></InquiryDecks>
+        return <InquiryDecks decks={props.decks??[]}></InquiryDecks>
     } else if(props.type === "register") {
         return <RegisterDecks></RegisterDecks>
     }
 }
 
-function InquiryDecks() {
+function InquiryDecks(props:{decks:Deck[]}) {
     const category = useCategoryStore();
-    const {decks, error, isLoading} = useDeck(category.currentLargeCategory, category.currentMediumCategory, category.currentSmallCategory)
-    if(error) {
-        return <></>
-    }
-    if(isLoading) {
-        return <></>
-    }
+    
+    // const {decks, error, isLoading} = useDeck(category.currentLargeCategory, category.currentMediumCategory, category.currentSmallCategory)
+    // if(error) {
+    //     return <></>
+    // }
+    // if(isLoading) {
+    //     return <></>
+    // }
     return (
         <div>{
-            decks.map((deck, idx) =>{
+            props.decks.map((deck, idx) =>{
                 return (<ul key={idx} className={styles.deck}>
                     <li>
                         <DeckSlot {...deckSlotAttrFactory(idx, deck, 1)}></DeckSlot>
