@@ -1,10 +1,7 @@
 import { Component, ReactNode, useState, useEffect, useReducer, MouseEvent} from 'react';
 import styles from './deck.module.scss';
-import Image from 'next/image';
 import Modal from './modal';
 import {Deck, useDeckStore} from '@/stores/deckStore'
-import useSWR from 'swr'
-import axios from 'axios';
 // import { useDeck } from '@/swr/useDeck';
 import { useCategoryStore } from '@/stores/categoryStore';
 
@@ -29,18 +26,14 @@ function Decks(props: {decks?:Deck[], type?: string}) {
 
 function InquiryDecks(props:{decks:Deck[]}) {
     const category = useCategoryStore();
-    
-    // const {decks, error, isLoading} = useDeck(category.currentLargeCategory, category.currentMediumCategory, category.currentSmallCategory)
-    // if(error) {
-    //     return <></>
-    // }
-    // if(isLoading) {
-    //     return <></>
-    // }
     return (
-        <div>{
+        <div>
+            {
             props.decks.map((deck, idx) =>{
-                return (<ul key={idx} className={styles.deck}>
+                return (<div className={styles.deck}>
+                    
+                    <p>Title</p>
+                    <ul key={idx}>
                     <li>
                         <DeckSlot {...deckSlotAttrFactory(idx, deck, 1)}></DeckSlot>
                     </li>
@@ -51,7 +44,7 @@ function InquiryDecks(props:{decks:Deck[]}) {
                         <DeckSlot {...deckSlotAttrFactory(idx, deck, 3)}></DeckSlot>
                     </li>
                 </ul>
-                )
+                </div>)
             })
         }</div>
     )
@@ -91,8 +84,8 @@ function RegisterDecks() {
             onEquipmentClick:()=> {openItemModal(); setSelectedImagePosition(`e${characterPosition}`)},
         }
     }
-    return (<>
-    <ul className={styles.deck}>
+    return (<div className={styles.deck}>
+    <ul >
         <li>
             <DeckSlot {...deckSlotAttrFactory(0, deck, 1)} {...deckSlotEventFactory(1)}></DeckSlot>
         </li>
@@ -105,7 +98,7 @@ function RegisterDecks() {
     </ul>
     <Modal type="characters" visible={characterModalVisible} closeModalHandler={()=>{closeCharacterModal()}} onImageClick={id => {setDeckItem(id); closeCharacterModal();}}></Modal>
     <Modal type="items" visible={itemModalVisible} closeModalHandler={()=>{closeItemModal()}} onImageClick={id => {setDeckItem(id); closeItemModal();}}></Modal>
-    </>
+    </div>
     )
 }
 

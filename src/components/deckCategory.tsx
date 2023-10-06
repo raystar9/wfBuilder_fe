@@ -1,8 +1,8 @@
-import { useContext } from "react";
+import { MouseEvent, useContext } from "react";
 import { useCategoryStore} from "@/stores/categoryStore";
 import { wfContext, Code} from "@/context/context";
 
-export default function DeckCategory() {
+export default function DeckCategory(props:{onMediumCategoryChange?:(event:MouseEvent) => void}) {
     const categoryStore = useCategoryStore()
     const categories = useContext(wfContext.getCategoryContext());
 

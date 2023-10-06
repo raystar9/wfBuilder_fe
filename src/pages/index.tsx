@@ -39,7 +39,7 @@ export default function Main(props: InferGetStaticPropsType<typeof getStaticProp
     }
     
     async function inquiryDecks(inqCond) {
-        const decks = (await axios.get(`http://${serverConfig.publicAddr}:3002/api/decks?largeCategory=${inqCond.largeCategory}&mediumCategory=${inqCond.mediumCategory}&smallCategory=${inqCond.smallCategory}&`)).data
+        const decks = (await axios.get(`http://${serverConfig.publicAddr}:${serverConfig.frontendPort}/api/decks?largeCategory=${inqCond.largeCategory}&mediumCategory=${inqCond.mediumCategory}&smallCategory=${inqCond.smallCategory}&`)).data
         setDecks(() =>  decks)
     }
     return <>

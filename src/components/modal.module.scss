@@ -12,14 +12,23 @@
     display:block;
 }
 .modalMain {
-    width: 80%;
-    margin-top: 3%;
-    margin-left: 10%;
-    margin-right: 10%;
+    @media (max-width: #{$breakpoint-tablet - 1px}){
+        width:90%;
+        max-width:310px;
+        height: 70%;
+    }
+    @media (min-width: #{$breakpoint-tablet}) and (max-width: #{$breakpoint-desktop - 1px}){
+        width:530px;
+        height: 70%;
+    }
+    @media (min-width: #{$breakpoint-desktop}){
+        width:965px;
+        height: 70%;
+    }
+    margin: 3% auto auto auto ;
+    padding:2px;
     background-color: white;
-    position: absolute;
-    display: inline-block;
-    height: 90%;
+    display: block;
 }
 .modalBody {
     height: calc(100% - 85px);

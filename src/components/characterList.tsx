@@ -1,7 +1,4 @@
 import { MouseEvent, useContext, useEffect } from "react"
-//import { CharactersContext } from "@/context/context";
-import Image from "next/image";
-// import { useCharacterStore } from "@/stores/characterStore";
 import styles from './characterList.module.scss';
 import { Character, wfContext } from "@/context/context";
 import TypeSelectBar, { TypeSelected } from "./typeSelectBar";
@@ -36,71 +33,27 @@ export default function CharacterList(props: { onCharacterClick?: (id: string) =
     const resultElement = new Array();
     const keys = Object.keys(_selectedRarity).sort((a, b) => {return +b-+a})
     for(let i in keys) {
-        if(!_selectedRarity[keys[i]]){
-            continue;
-        }
         let _characters = characters.filter((item) => {
             return item.stars === keys[i]
         });
-        resultElement.push(<RarityGroup characters={_characters} selectedElements={_selectedElements as TypeSelected} onCharacterClick={props.onCharacterClick}></RarityGroup>);
+        resultElement.push(<li key={i} className={!_selectedRarity[keys[i]]? styles.hide:""}><RarityGroup key={i} characters={_characters} selectedElements={_selectedElements as TypeSelected} onCharacterClick={props.onCharacterClick}></RarityGroup></li>);
     }
-    return (<ul>{resultElement}</ul>);
-    // const _selectedElements: string[] = []
-    // for (var i in props.selectedElements) {
-    //   if (props.selectedElements[i] == true)
-    //     _selectedElements.push(i);
-    // }
-    // if (_selectedElements.length == 0) {
-    //   _selectedElements.push(...["0", "1", "2", "3", "4", "5"])
-    // }
-    // const _selectedRarity: string[] = [];
-    // for (var i in props.selectedRarity) {
-    //   if (props.selectedRarity[i] == true)
-    //   _selectedRarity.push(i);
-    // }
-    // if (_selectedRarity.length == 0) {
-    //     _selectedRarity.push(...["1", "2", "3", "4", "5"])
-    // }
-    const _characters = characters.reduce((prev, curr, idx, array) => {
-        return prev;
-    })
-
-    // const _characters = characters.filter((item) => {
-    //     for(let i in _selectedElements) {
-    //         if(_selectedElements[i] === item.type) break;
-    //         if(_selectedElements.length - 1 == +i) {
-    //             return false;
-    //         }
-    //     }
-    //     for(let i in _selectedRarity) {
-    //         if(_selectedRarity[i] === item.stars) break;
-    //         if(_selectedRarity.length - 1 == +i) {
-    //             return false;
-    //         }
-    //     }
-    //     return item;
-    // })
-    
-    // return (<div>
-    //     {_characters.map((item, idx) =>
-    //     <img key={idx} className={styles.image} id={`c-image-${item.id}`} src={`/characters/${item.id}.png`} alt="" onClick={e => { props.onCharacterClick ? props.onCharacterClick(item.id) : null }} />
-    //     )}
-    // </div>)
+    return (<ul className={styles.characterBody}>{resultElement}</ul>);
 }
 
 function RarityGroup(props:{characters:Character[], selectedElements:TypeSelected, onCharacterClick}) {
     const resultElement = new Array();
     const keys = Object.keys(props.selectedElements).sort((a, b) => {return +a-+b})
     for(let i in keys) {
-        if(!props.selectedElements[keys[i]]){
-            continue;
-        }
+        // if(!props.selectedElements[keys[i]]){
+        //     continue;
+        // }
         let _characters = props.characters.filter((item) => {
             return item.type === keys[i]
         });
-        resultElement.push(<li><ElementGroup characters={_characters} onCharacterClick={props.onCharacterClick}></ElementGroup></li>);
+        resultElement.push(<li className={!props.selectedElements[keys[i]]? styles.hide:""} key={i}><ElementGroup characters={_characters} onCharacterClick={props.onCharacterClick}></ElementGroup></li>);
     }
-    return (<li><ul>{resultElement}</ul></li>);
+    return (<ul>{resultElement}</ul>);
 }
 
 function ElementGroup(props:{characters:Character[], onCharacterClick}) {
