@@ -30,10 +30,10 @@ function InquiryDecks(props:{decks:Deck[]}) {
         <div>
             {
             props.decks.map((deck, idx) =>{
-                return (<div className={styles.deck}>
+                return (<div key={idx} className={styles.deck}>
                     
                     <p>Title</p>
-                    <ul key={idx}>
+                    <ul>
                     <li>
                         <DeckSlot {...deckSlotAttrFactory(idx, deck, 1)}></DeckSlot>
                     </li>
