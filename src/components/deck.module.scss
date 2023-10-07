@@ -27,6 +27,17 @@ div.deck {
     padding: 10px;
     border: 1px solid $border-color-normal;
     border-radius: 4px;
+
+    >div.titleArea {
+        display:flex;
+        flex-direction: row;
+        >div:nth-child(2) {
+            margin: 0 0 0 auto;
+            >input {
+                width:80px;
+            }
+        }
+    }
     >p {
         padding-left:8px;
     }

@@ -31,8 +31,10 @@ function InquiryDecks(props:{decks:Deck[]}) {
             {
             props.decks.map((deck, idx) =>{
                 return (<div key={idx} className={styles.deck}>
-                    
-                    <p>Title</p>
+                    <div className={styles.titleArea}>
+                        <div><p>{deck.title}</p></div>
+                        <div><input type="text" value={deck.deckCode}/></div>
+                    </div>
                     <ul>
                     <li>
                         <DeckSlot {...deckSlotAttrFactory(idx, deck, 1)}></DeckSlot>
@@ -85,6 +87,11 @@ function RegisterDecks() {
         }
     }
     return (<div className={styles.deck}>
+        <div className={styles.titleArea}>
+            <div><input type="text" placeholder='제목' onChange={e => {{updateDeck({position:"title",value:e.target.value})}}}/></div>
+            <div><input type="text" placeholder='덱 코드' maxLength={6} onChange={e => {{updateDeck({position:"deckCode",value:e.target.value})}}}/></div>
+        </div>
+        
     <ul >
         <li>
             <DeckSlot {...deckSlotAttrFactory(0, deck, 1)} {...deckSlotEventFactory(1)}></DeckSlot>

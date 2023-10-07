@@ -3,6 +3,7 @@ import styles from './characterList.module.scss';
 import { Character, wfContext } from "@/context/context";
 import TypeSelectBar, { TypeSelected } from "./typeSelectBar";
 import { RaritySelected } from "./raritySelectBar";
+import Image from "next/image";
 
 
 export default function CharacterList(props: { onCharacterClick?: (id: string) => void, selectedElements:TypeSelected, selectedRarity:RaritySelected }) {
@@ -45,9 +46,6 @@ function RarityGroup(props:{characters:Character[], selectedElements:TypeSelecte
     const resultElement = new Array();
     const keys = Object.keys(props.selectedElements).sort((a, b) => {return +a-+b})
     for(let i in keys) {
-        // if(!props.selectedElements[keys[i]]){
-        //     continue;
-        // }
         let _characters = props.characters.filter((item) => {
             return item.type === keys[i]
         });

@@ -1,6 +1,7 @@
 import {create} from 'zustand'
 import axios from 'axios';
 import serverConfig from '@/config';
+import {Item} from '@/context/context'
 
 type DeckStore = {
     deck:Deck,
@@ -53,6 +54,7 @@ type InquiryCondition = {
 }
 
 type Deck =  {
+    title?:string,
     m1?: string,
     m2?: string,
     m3?: string,
@@ -65,9 +67,11 @@ type Deck =  {
     s1?: string,
     s2?: string,
     s3?: string,
-    deckCodes?:string,
-    comments?:string
+    deckCode?:string,
+    comment?:string
 }
+
+
 
 type UpdateOption = {
     position: keyof Deck;

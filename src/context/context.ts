@@ -31,8 +31,6 @@ class WFContext {
 const wfContext = new WFContext();
 
 //const createCategoryContext = (init:Category) => {return createContext<Category>(init)}
-export type {Code, Item, Character}
-export {wfContext}
 
 type Category = {
   largeCategories:Code[]
@@ -60,3 +58,6 @@ type Character = {
     name: string
     stars:string
 }
+
+export type {Code, Item, Character}
+export {wfContext}
