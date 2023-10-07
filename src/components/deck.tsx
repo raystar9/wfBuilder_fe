@@ -33,7 +33,7 @@ function InquiryDecks(props:{decks:Deck[]}) {
                 return (<div key={idx} className={styles.deck}>
                     <div className={styles.titleArea}>
                         <div><p>{deck.title}</p></div>
-                        <div><input type="text" value={deck.deckCode}/></div>
+                        <div><input type="text" value={deck.deckCode} maxLength={6} readOnly={true}/></div>
                     </div>
                     <ul>
                     <li>
