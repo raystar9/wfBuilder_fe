@@ -6,20 +6,21 @@ div.inquiryArea {
   >div {
     padding:5px;
     display: inline-block;
-    &.deckCategory {
-    }
     &.alignRight {
       margin: 0 0 0 auto;
-    }
-    >.pagination {
-      >p {
-        width:30px;
-        text-align: center;
+      >div{
+        display: inline-block;
+        &.pagination {
+          >p {
+            width:30px;
+            text-align: center;
+          }
+        }
+        &.register {
+          margin-left: 5px;
+          padding:5px;
+        }
       }
-    }
-    >.register {
-      margin-left: 5px;
-      padding:5px;
     }
   }
 }
