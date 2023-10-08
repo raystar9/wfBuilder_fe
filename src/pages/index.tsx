@@ -6,12 +6,12 @@ import axios from 'axios';
 import Decks from '@/components/deck';
 import DeckCategory from '@/components/deckCategory';
 import { useCategoryStore } from '@/stores/categoryStore';
-// import { useDeckStore } from '@/stores/deckStore'
+
 import { Character, Code, Item, wfContext } from '@/context/context';
 import useSWR, {SWRConfig, unstable_serialize} from 'swr';
-// import { useDeck } from '@/swr/useDeck';
 import serverConfig from '@/config';
 import { useDeckStore } from '@/stores/deckStore';
+import styles from './index.module.scss';
 
 export const getStaticProps = (async context => {
     const largeCategories = (await axios.get(`http://127.0.0.1:${serverConfig.backendPort}/rest/codes/01`)).data;
@@ -27,26 +27,58 @@ export default function Main(props: InferGetStaticPropsType<typeof getStaticProp
     const categoryStore = useCategoryStore()
     const deckStore = useDeckStore();
     const [decks, setDecks] = useState();
+    const [page, setPage] = useState(1);
+
     // const inquiryDecks = useDeckStore().inquiryDecks;
     wfContext.createCategoryContext(props.categories);
     wfContext.createItemContext(props.items);
     wfContext.createCharacterContext(props.characters);
-    
-    const inqCond = {
-        largeCategory: categoryStore.currentLargeCategory,
-        mediumCategory: categoryStore.currentMediumCategory,
-        smallCategory: categoryStore.currentSmallCategory,
+
+    const nextPage = () => {
+        setPage(prevPage => {
+            const page = ++prevPage;
+            inquiryDecks(page)
+            return page
+        })
+        
+    }
+    const prevPage = () => {
+        setPage(prevPage => {
+            if(prevPage > 1){
+                const page = --prevPage;
+                inquiryDecks(page)
+                return page
+            } else {
+                return 1
+            }
+        })
     }
     
-    async function inquiryDecks(inqCond) {
-        const decks = (await axios.get(`http://${serverConfig.publicAddr}:${serverConfig.frontendPort}/api/decks?largeCategory=${inqCond.largeCategory}&mediumCategory=${inqCond.mediumCategory}&smallCategory=${inqCond.smallCategory}&`)).data
+    
+    async function inquiryDecks(page:number) {
+        const inqCond = {
+            largeCategory: categoryStore.currentLargeCategory,
+            mediumCategory: categoryStore.currentMediumCategory,
+            smallCategory: categoryStore.currentSmallCategory,
+        }
+        
+        const decks = (await axios.get(`http://${serverConfig.publicAddr}:${serverConfig.frontendPort}/api/decks?largeCategory=${inqCond.largeCategory}&mediumCategory=${inqCond.mediumCategory}&smallCategory=${inqCond.smallCategory}&page=${page}`)).data
         setDecks(() =>  decks)
     }
     return <>
-        <DeckCategory />
-        <button onClick={() => { inquiryDecks(inqCond) }}>조회</button>
-        {/* <button onClick={() => {mutate([categoryStore.currentLargeCategory, categoryStore.currentMediumCategory, categoryStore.currentSmallCategory])}}>조회</button> */}
-        <Link rel="stylesheet" href="/register" ><button onClick={e => {deckStore.setDeck({})}}>등록</button></Link>
+        <div className={styles.inquiryArea}>
+            <div className={styles.deckCategory}><DeckCategory /></div>
+            <div className={styles.alignRight}>
+                <div className={styles.pagination}>
+                    <button onClick={() => {prevPage()}}>&lt;</button>
+                    <p>{page}</p>
+                    <button onClick={() => {nextPage()}}>&gt;</button>
+                </div>
+                {/* <button onClick={() => { inquiryDecks(inqCond, page) }}>조회</button> */}
+            <div className={styles.register}><Link rel="stylesheet" href="/register" ><button onClick={e => {deckStore.setDeck({})}}>등록</button></Link></div>
+            </div>
+        </div>
+        
         <Decks type='inquiry' decks={decks} />
     </>
 }

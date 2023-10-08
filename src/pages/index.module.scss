@@ -1,0 +1,25 @@
+div.inquiryArea {
+  height:40px;
+  display: block;
+  display: flex;
+  flex-direction: row;
+  >div {
+    padding:5px;
+    display: inline-block;
+    &.deckCategory {
+    }
+    &.alignRight {
+      margin: 0 0 0 auto;
+    }
+    >.pagination {
+      >p {
+        width:30px;
+        text-align: center;
+      }
+    }
+    >.register {
+      margin-left: 5px;
+      padding:5px;
+    }
+  }
+}
