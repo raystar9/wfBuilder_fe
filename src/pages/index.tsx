@@ -37,7 +37,7 @@ export default function Main(props: InferGetStaticPropsType<typeof getStaticProp
     const nextPage = () => {
         setPage(prevPage => {
             const page = ++prevPage;
-            inquiryDecks(page)
+            inquiryDecks(page, inqCond)
             return page
         })
         
@@ -46,28 +46,37 @@ export default function Main(props: InferGetStaticPropsType<typeof getStaticProp
         setPage(prevPage => {
             if(prevPage > 1){
                 const page = --prevPage;
-                inquiryDecks(page)
+                inquiryDecks(page, inqCond)
                 return page
             } else {
                 return 1
             }
         })
     }
+    const inqCond = {
+        largeCategory: categoryStore.currentLargeCategory,
+        mediumCategory: categoryStore.currentMediumCategory,
+        smallCategory: categoryStore.currentSmallCategory,
+    }
     
-    
-    async function inquiryDecks(page:number) {
-        const inqCond = {
-            largeCategory: categoryStore.currentLargeCategory,
-            mediumCategory: categoryStore.currentMediumCategory,
-            smallCategory: categoryStore.currentSmallCategory,
-        }
-        
+    async function inquiryDecks(page:number, inqCond) {
         const decks = (await axios.get(`http://${serverConfig.publicAddr}:${serverConfig.frontendPort}/api/decks?largeCategory=${inqCond.largeCategory}&mediumCategory=${inqCond.mediumCategory}&smallCategory=${inqCond.smallCategory}&page=${page}`)).data
         setDecks(() =>  decks)
     }
     return <>
         <div className={styles.inquiryArea}>
-            <div className={styles.deckCategory}><DeckCategory /></div>
+            <div className={styles.deckCategory}>
+                <DeckCategory 
+                    onLargeCategoryChange={(newCategory) => {
+                        inqCond.largeCategory = newCategory;
+                        inquiryDecks(page, inqCond)
+                    }} 
+                    onMediumCategoryChange={(newCategory) => {
+                        inqCond.mediumCategory = newCategory;
+                        inquiryDecks(page, inqCond)
+                    }}
+                />
+            </div>
             <div className={styles.alignRight}>
                 <div className={styles.pagination}>
                     <button onClick={() => {prevPage()}}>&lt;</button>

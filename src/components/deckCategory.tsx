@@ -1,13 +1,18 @@
-import { MouseEvent, useContext } from "react";
+import { MouseEvent, ChangeEvent, useContext } from "react";
 import { useCategoryStore} from "@/stores/categoryStore";
 import { wfContext, Code} from "@/context/context";
 
-export default function DeckCategory(props:{onMediumCategoryChange?:(event:MouseEvent) => void}) {
+export default function DeckCategory(props:{onLargeCategoryChange?:(newCategory:string) => void, onMediumCategoryChange?:(newCategory:string) => void}) {
     const categoryStore = useCategoryStore()
     const categories = useContext(wfContext.getCategoryContext());
 
     const LCategory = (<>
-        <select name="" id="" onChange={event => { categoryStore.setCurrentLargeCategory(event.target.value) }} value={categoryStore.currentLargeCategory}>
+        <select name="" id="" onChange={
+            event => { 
+                categoryStore.setCurrentLargeCategory(event.target.value); 
+                props.onLargeCategoryChange?props.onLargeCategoryChange(event.target.value):null;
+            }} 
+            value={categoryStore.currentLargeCategory}>
             <option key="0" value=""></option>
             {
                 categories.largeCategories.map((item: Code, idx: number) => {
@@ -19,7 +24,14 @@ export default function DeckCategory(props:{onMediumCategoryChange?:(event:Mouse
         </select>
     </>)
     const MCategory = (<>
-        <select name="" id="" onChange={event => { categoryStore.setCurrentMediumCategory(event.target.value)}} value={categoryStore.currentMediumCategory} style={{minWidth:"100px"}}>
+        <select name="" id="" 
+            onChange={event => { 
+                categoryStore.setCurrentMediumCategory(event.target.value);
+                props.onMediumCategoryChange?props.onMediumCategoryChange(event.target.value):null;
+            }}
+            value={categoryStore.currentMediumCategory}
+            style={{minWidth:"100px"}}
+        >
             <option key="0" value="" ></option>
             {
                 categories.mediumCategories.filter(item => { return item.relKey == categoryStore.currentLargeCategory }).map((item: Code, idx: number) => {
