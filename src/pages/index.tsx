@@ -1,5 +1,5 @@
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 
@@ -34,6 +34,9 @@ export default function Main(props: InferGetStaticPropsType<typeof getStaticProp
     wfContext.createItemContext(props.items);
     wfContext.createCharacterContext(props.characters);
 
+    useEffect(() => {
+        inquiryDecks(page, inqCond)
+    }, [])
     const nextPage = () => {
         setPage(prevPage => {
             const page = ++prevPage;
